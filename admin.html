@@ -1,0 +1,1711 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cooper Wash - Sistema de Gestión Completo</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ffe0f0 0%, #fff0f5 50%, #ffebee 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+            color: #5d4037;
+        }
+
+        /* BURBUJAS ANIMADAS */
+        @keyframes bubbleFloat {
+            0% { transform: translateY(0) scale(0.8); opacity: 0; }
+            20% { opacity: 0.7; }
+            80% { opacity: 0.5; }
+            100% { transform: translateY(-100vh) scale(1.2); opacity: 0; }
+        }
+
+        .bubble {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            animation: bubbleFloat linear infinite;
+            filter: drop-shadow(0 0 8px rgba(135, 206, 250, 0.5));
+        }
+
+        .bubble svg { width: 100%; height: 100%; }
+
+        .bubble-1 { width: 40px; height: 40px; left: 10%; bottom: -50px; animation-duration: 6s; animation-delay: 0s; }
+        .bubble-2 { width: 30px; height: 30px; left: 25%; bottom: -50px; animation-duration: 7s; animation-delay: 1s; }
+        .bubble-3 { width: 50px; height: 50px; left: 40%; bottom: -50px; animation-duration: 8s; animation-delay: 2s; }
+        .bubble-4 { width: 35px; height: 35px; left: 60%; bottom: -50px; animation-duration: 6.5s; animation-delay: 0.5s; }
+        .bubble-5 { width: 45px; height: 45px; left: 75%; bottom: -50px; animation-duration: 7.5s; animation-delay: 1.5s; }
+        .bubble-6 { width: 28px; height: 28px; left: 85%; bottom: -50px; animation-duration: 5.5s; animation-delay: 3s; }
+
+        /* HUELLITAS */
+        @keyframes pawWiggle {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(8deg); }
+        }
+
+        .paw-print {
+            position: fixed;
+            z-index: 0;
+            pointer-events: none;
+            animation: pawWiggle 5s infinite ease-in-out;
+            opacity: 0.18;
+        }
+
+        .paw-1 { top: 10%; left: 5%; width: 50px; animation-delay: 0s; }
+        .paw-2 { top: 30%; right: 8%; width: 45px; animation-delay: 1s; }
+        .paw-3 { top: 55%; left: 12%; width: 48px; animation-delay: 2s; }
+        .paw-4 { top: 78%; right: 18%; width: 42px; animation-delay: 3s; }
+
+        /* CHIWAWA CAFÉ JUGUETÓN */
+        .chihuahua {
+            width: 110px;
+            height: 110px;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 10;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .chihuahua:hover { transform: scale(1.15); }
+
+        @keyframes wave {
+            0%, 100% { transform: rotate(-15deg); }
+            50% { transform: rotate(30deg) translateY(-10px); }
+        }
+
+        .wave-paw { animation: wave 0.6s ease-in-out 2; }
+
+        @keyframes wag {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(25deg); }
+            75% { transform: rotate(-25deg); }
+        }
+
+        .happy-tail { animation: wag 0.5s infinite; }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.15);
+            position: relative;
+            z-index: 1;
+            border: 5px solid #8B4513;
+            overflow: hidden;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 35px;
+            padding-bottom: 30px;
+            border-bottom: 4px dashed #FFB6B6;
+            position: relative;
+        }
+
+        .logo {
+            width: 180px;
+            height: 180px;
+            margin: 0 auto 20px;
+            background-image: url('logo.jpeg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 8px 25px rgba(139, 69, 19, 0.3);
+            border: 4px solid #8B4513;
+        }
+
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            color: #8B4513;
+            font-size: 3em;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(139, 69, 19, 0.1);
+        }
+
+        .subtitle {
+            color: #6d4c41;
+            font-size: 1.2em;
+            font-weight: 500;
+        }
+
+        /* DASHBOARD */
+        .dashboard {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 18px;
+            margin-bottom: 30px;
+        }
+
+        .stat-card {
+            background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+            padding: 18px;
+            border-radius: 16px;
+            text-align: center;
+            box-shadow: 0 6px 15px rgba(139,69,19,0.25);
+            border: 2px solid #6d3710;
+            transition: transform 0.3s ease;
+            color: white;
+        }
+
+        .stat-card:hover { transform: translateY(-5px); }
+
+        .stat-card h3 {
+            font-size: 0.8em;
+            margin-bottom: 10px;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-card .amount {
+            font-size: 1.8em;
+            font-weight: bold;
+        }
+
+        /* TABS */
+        .tabs {
+            display: flex;
+            gap: 12px;
+            margin-bottom: 25px;
+            border-bottom: 3px solid #FFB6B6;
+            overflow-x: auto;
+            padding-bottom: 5px;
+        }
+
+        .tab {
+            padding: 14px 28px;
+            background: transparent;
+            border: none;
+            color: #8B4513;
+            font-size: 1.05em;
+            font-weight: 600;
+            cursor: pointer;
+            border-radius: 12px 12px 0 0;
+            border-bottom: 4px solid transparent;
+            transition: all 0.3s;
+            white-space: nowrap;
+        }
+
+        .tab.active {
+            background: #FFF5F5;
+            border-bottom-color: #8B4513;
+            color: #5a2d0c;
+            font-weight: 700;
+        }
+
+        .tab:hover:not(.active) { background: #ffe0b2; }
+
+        .hidden { display: none; }
+
+        /* FORM SECTION */
+        .form-section {
+            background: linear-gradient(135deg, #fff8f5 0%, #fef5e8 100%);
+            padding: 30px;
+            border-radius: 24px;
+            margin-bottom: 30px;
+            border: 3px solid #FFB6B6;
+            position: relative;
+            box-shadow: 0 8px 25px rgba(255,182,182,0.2);
+        }
+
+        h2 {
+            color: #8B4513;
+            margin-bottom: 22px;
+            font-size: 1.7em;
+            font-family: 'Fredoka One', cursive;
+        }
+
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+            gap: 18px;
+            margin-bottom: 22px;
+        }
+
+        .form-group {
+            display: flex;
+            flex-direction: column;
+        }
+
+        label {
+            color: #8B4513;
+            font-weight: 600;
+            margin-bottom: 6px;
+            font-size: 0.98em;
+        }
+
+        input, select, textarea {
+            padding: 14px;
+            border: 2px solid #FFB6B6;
+            border-radius: 12px;
+            font-size: 1em;
+            background: white;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        input:focus, select:focus, textarea:focus {
+            outline: none;
+            border-color: #8B4513;
+            box-shadow: 0 0 0 3px rgba(139,69,19,0.15);
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+            gap: 12px;
+            margin: 18px 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: white;
+            border: 2px solid #FFB6B6;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-weight: 500;
+        }
+
+        .checkbox-item:hover {
+            background: #fff0f0;
+            border-color: #8B4513;
+            transform: translateY(-2px);
+        }
+
+        .btn {
+            padding: 14px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.1em;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(139,69,19,0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(139,69,19,0.4);
+        }
+
+        .btn-small {
+            padding: 8px 16px;
+            font-size: 0.9em;
+        }
+
+        .btn-whatsapp {
+            background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+            color: white;
+        }
+
+        .btn-danger {
+            background: linear-gradient(135deg, #f44336 0%, #d32f2f 100%);
+            color: white;
+        }
+
+        .btn-edit {
+            background: linear-gradient(135deg, #FF9800 0%, #F57C00 100%);
+            color: white;
+        }
+
+        .cost-display {
+            background: linear-gradient(135deg, #6d4c41 0%, #8B4513 100%);
+            color: white;
+            padding: 22px;
+            border-radius: 14px;
+            text-align: center;
+            font-size: 1.8em;
+            font-weight: bold;
+            margin: 25px 0;
+            box-shadow: 0 6px 18px rgba(139,69,19,0.25);
+        }
+
+        /* CLIENTS GRID */
+        .clients-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(350px, 1fr));
+            gap: 25px;
+        }
+
+        .client-card {
+            background: linear-gradient(135deg, #fff8f5 0%, #fef5e8 100%);
+            border: 3px solid #FFB6B6;
+            border-radius: 20px;
+            padding: 20px;
+            box-shadow: 0 8px 20px rgba(0,0,0,0.1);
+            transition: all 0.3s;
+        }
+
+        .client-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 30px rgba(0,0,0,0.15);
+        }
+
+        .client-header {
+            display: flex;
+            gap: 15px;
+            margin-bottom: 15px;
+            align-items: center;
+        }
+
+        .client-photo {
+            width: 100px;
+            height: 100px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 3px solid #8B4513;
+            box-shadow: 0 4px 12px rgba(139,69,19,0.2);
+        }
+
+        .client-photo.no-photo {
+            background: linear-gradient(135deg, #FFB6B6 0%, #FFC0CB 100%);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 3em;
+        }
+
+        .client-info {
+            flex: 1;
+        }
+
+        .client-name {
+            color: #8B4513;
+            font-size: 1.3em;
+            font-weight: 700;
+            margin-bottom: 5px;
+        }
+
+        .client-pet {
+            color: #6d4c41;
+            font-size: 1.1em;
+            font-weight: 600;
+        }
+
+        .info-section {
+            margin: 15px 0;
+            padding: 12px;
+            background: white;
+            border-radius: 12px;
+            border-left: 4px solid #8B4513;
+        }
+
+        .info-label {
+            color: #8B4513;
+            font-weight: 700;
+            font-size: 0.9em;
+            text-transform: uppercase;
+            margin-bottom: 5px;
+        }
+
+        .info-value {
+            color: #5d4037;
+            margin-bottom: 8px;
+        }
+
+        .tags {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-top: 10px;
+        }
+
+        .tag {
+            background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+            color: white;
+            padding: 5px 12px;
+            border-radius: 20px;
+            font-size: 0.85em;
+            font-weight: 600;
+        }
+
+        .action-buttons {
+            display: flex;
+            gap: 10px;
+            margin-top: 15px;
+            flex-wrap: wrap;
+        }
+
+        .no-data {
+            text-align: center;
+            padding: 60px 20px;
+            color: #6d4c41;
+        }
+
+        .no-data-icon {
+            font-size: 5em;
+            margin-bottom: 20px;
+        }
+
+        .money-highlight {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 10px;
+        }
+
+        .estimated-price {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+            padding: 8px 16px;
+            border-radius: 10px;
+            font-weight: 700;
+            display: inline-block;
+            margin-top: 5px;
+        }
+
+        .search-bar {
+            margin-bottom: 20px;
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 15px;
+        }
+
+        /* Modal para editar precio */
+        .modal {
+            display: none;
+            position: fixed;
+            z-index: 1000;
+            left: 0;
+            top: 0;
+            width: 100%;
+            height: 100%;
+            background-color: rgba(0,0,0,0.5);
+            animation: fadeIn 0.3s;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; }
+            to { opacity: 1; }
+        }
+
+        .modal-content {
+            background: white;
+            margin: 5% auto;
+            padding: 30px;
+            border-radius: 20px;
+            width: 90%;
+            max-width: 600px;
+            max-height: 85vh;
+            overflow-y: auto;
+            box-shadow: 0 10px 40px rgba(0,0,0,0.3);
+            border: 3px solid #8B4513;
+            animation: slideDown 0.3s;
+        }
+
+        @keyframes slideDown {
+            from { transform: translateY(-50px); opacity: 0; }
+            to { transform: translateY(0); opacity: 1; }
+        }
+
+        .modal-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            padding-bottom: 15px;
+            border-bottom: 3px solid #FFB6B6;
+        }
+
+        .modal-title {
+            color: #8B4513;
+            font-size: 1.5em;
+            font-weight: 700;
+        }
+
+        .close {
+            font-size: 2em;
+            font-weight: bold;
+            color: #8B4513;
+            cursor: pointer;
+            transition: color 0.3s;
+        }
+
+        .close:hover {
+            color: #d32f2f;
+        }
+
+        @media (max-width: 768px) {
+            .container { padding: 25px; }
+            h1 { font-size: 2.3em; }
+            .form-grid { grid-template-columns: 1fr; }
+            .dashboard { grid-template-columns: repeat(2, 1fr); }
+            .clients-grid { grid-template-columns: 1fr; }
+        }
+    
+        /* Estilos para fotos y galería */
+        .btn-photo {
+            background: linear-gradient(135deg, #2196F3 0%, #1976D2 100%);
+            color: white;
+        }
+
+        .gallery {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(100px, 1fr));
+            gap: 10px;
+            margin-top: 15px;
+        }
+
+        .gallery-item {
+            position: relative;
+            width: 100%;
+            padding-top: 100%;
+            border-radius: 10px;
+            overflow: hidden;
+            border: 2px solid #FFB6B6;
+            cursor: pointer;
+        }
+
+        .gallery-item img {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+        }
+
+        .gallery-item .delete-photo {
+            position: absolute;
+            top: 5px;
+            right: 5px;
+            background: rgba(244, 67, 54, 0.9);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            width: 25px;
+            height: 25px;
+            cursor: pointer;
+            font-size: 0.8em;
+        }
+
+        .add-photo-btn {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #FFB6B6 0%, #FFC0CB 100%);
+            border: 2px dashed #8B4513;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 2em;
+            color: #8B4513;
+            transition: all 0.3s;
+        }
+
+        .add-photo-btn:hover {
+            background: linear-gradient(135deg, #FFC0CB 0%, #FFD0DB 100%);
+            transform: scale(1.05);
+        }
+
+        .ficha-preview {
+            background: white;
+            border: 3px solid #8B4513;
+            border-radius: 20px;
+            padding: 30px;
+            margin: 20px 0;
+            box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+        }
+
+        .ficha-photo {
+            width: 150px;
+            height: 150px;
+            border-radius: 50%;
+            object-fit: cover;
+            border: 4px solid #8B4513;
+            margin: 0 auto 15px;
+            display: block;
+        }
+
+        .ficha-name {
+            font-family: 'Fredoka One', cursive;
+            font-size: 2em;
+            color: #8B4513;
+            text-align: center;
+        }
+
+        .ficha-info {
+            margin: 15px 0;
+            padding: 15px;
+            background: #fff8f5;
+            border-radius: 10px;
+        }
+
+    </style>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/html2canvas/1.4.1/html2canvas.min.js"></script>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJnSVvjDY-RPD9468EuJsoqDH7gRMR9hw",
+            authDomain: "cooper-wash.firebaseapp.com",
+            projectId: "cooper-wash",
+            storageBucket: "cooper-wash.firebasestorage.app",
+            messagingSenderId: "453258464544",
+            appId: "1:453258464544:web:ec41218bc8bfb399d05b45"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+        let unsubscribeClientes = null;
+    </script>
+
+</head>
+<body>
+    <!-- BURBUJAS AZULES -->
+    <div class="bubble bubble-1"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#87CEFA" opacity="0.6"/><circle cx="35" cy="35" r="15" fill="#B0E0E6" opacity="0.8"/><circle cx="65" cy="40" r="10" fill="#ADD8E6" opacity="0.8"/></svg></div>
+    <div class="bubble bubble-2"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#87CEEB" opacity="0.5"/><circle cx="40" cy="30" r="10" fill="#ADD8E6" opacity="0.9"/></svg></div>
+    <div class="bubble bubble-3"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#00BFFF" opacity="0.6"/><circle cx="30" cy="40" r="18" fill="#87CEFA" opacity="0.7"/><circle cx="70" cy="35" r="14" fill="#87CEFA" opacity="0.8"/></svg></div>
+    <div class="bubble bubble-4"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#1E90FF" opacity="0.55"/><circle cx="60" cy="45" r="12" fill="#87CEEB" opacity="0.8"/></svg></div>
+    <div class="bubble bubble-5"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#4682B4" opacity="0.6"/><circle cx="35" cy="30" r="15" fill="#87CEFA" opacity="0.7"/><circle cx="65" cy="40" r="10" fill="#ADD8E6" opacity="0.8"/></svg></div>
+    <div class="bubble bubble-6"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#6495ED" opacity="0.5"/><circle cx="40" cy="35" r="12" fill="#87CEFA" opacity="0.9"/></svg></div>
+
+    <!-- HUELLITAS -->
+    <div class="paw-print paw-1"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="60" rx="20" ry="30" fill="#8B4513" opacity="0.6"/><circle cx="35" cy="30" r="15" fill="#8B4513" opacity="0.6"/><circle cx="65" cy="30" r="15" fill="#8B4513" opacity="0.6"/><circle cx="25" cy="45" r="12" fill="#8B4513" opacity="0.6"/><circle cx="75" cy="45" r="12" fill="#8B4513" opacity="0.6"/></svg></div>
+    <div class="paw-print paw-2"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="60" rx="18" ry="28" fill="#8B4513" opacity="0.6"/><circle cx="35" cy="32" r="13" fill="#8B4513" opacity="0.6"/><circle cx="65" cy="32" r="13" fill="#8B4513" opacity="0.6"/><circle cx="25" cy="48" r="10" fill="#8B4513" opacity="0.6"/><circle cx="75" cy="48" r="10" fill="#8B4513" opacity="0.6"/></svg></div>
+    <div class="paw-print paw-3"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="60" rx="22" ry="32" fill="#8B4513" opacity="0.6"/><circle cx="33" cy="28" r="16" fill="#8B4513" opacity="0.6"/><circle cx="67" cy="28" r="16" fill="#8B4513" opacity="0.6"/><circle cx="23" cy="43" r="13" fill="#8B4513" opacity="0.6"/><circle cx="77" cy="43" r="13" fill="#8B4513" opacity="0.6"/></svg></div>
+    <div class="paw-print paw-4"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="60" rx="19" ry="29" fill="#8B4513" opacity="0.6"/><circle cx="36" cy="31" r="14" fill="#8B4513" opacity="0.6"/><circle cx="64" cy="31" r="14" fill="#8B4513" opacity="0.6"/><circle cx="26" cy="46" r="11" fill="#8B4513" opacity="0.6"/><circle cx="74" cy="46" r="11" fill="#8B4513" opacity="0.6"/></svg></div>
+
+    <!-- CHIWAWA CAFÉ -->
+    <div class="chihuahua" id="chihuahua">
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="60" cy="80" rx="35" ry="28" fill="#8B4513"/>
+            <circle cx="75" cy="55" r="25" fill="#A0522D" id="head"/>
+            <path d="M60 40 Q50 25 55 15 Q60 25 65 35 Z" fill="#8B4513"/>
+            <path d="M90 40 Q100 25 95 15 Q90 25 85 35 Z" fill="#8B4513"/>
+            <ellipse cx="85" cy="65" rx="15" ry="12" fill="#D2691E"/>
+            <circle cx="88" cy="63" r="3" fill="#000"/>
+            <circle cx="70" cy="52" r="6" fill="#fff"/>
+            <circle cx="80" cy="52" r="6" fill="#fff"/>
+            <circle cx="71" cy="53" r="3" fill="#000"/>
+            <circle cx="81" cy="53" r="3" fill="#000"/>
+            <circle cx="69" cy="51" r="2" fill="#fff" opacity="0.7"/>
+            <circle cx="79" cy="51" r="2" fill="#fff" opacity="0.7"/>
+            <path d="M82 70 Q85 73 88 70" fill="#ff6b9d" stroke="#ff6b9d" stroke-width="2" id="tongue"/>
+            <ellipse cx="45" cy="90" rx="12" ry="20" fill="#8B4513" id="leftPaw" transform="rotate(-15 45 90)"/>
+            <ellipse cx="75" cy="90" rx="12" ry="20" fill="#8B4513" id="rightPaw"/>
+            <path d="M30 75 Q20 70 25 60 Q30 65 35 70 Z" fill="#A0522D" id="tail"/>
+        </svg>
+    </div>
+
+    <!-- MODAL PARA EDITAR PRECIO -->
+    <div id="editModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">Editar Precio de Cita</h2>
+                <span class="close" onclick="closeEditModal()">&times;</span>
+            </div>
+            <div id="modalBody"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo"></div>
+            <h1>Cooper Wash</h1>
+            <p class="subtitle">Sistema de Gestión Completo</p>
+        </header>
+
+        <div class="dashboard">
+            <div class="stat-card"><h3>Hoy</h3><div class="amount" id="dailyTotal">$0</div></div>
+            <div class="stat-card"><h3>Esta Semana</h3><div class="amount" id="weeklyTotal">$0</div></div>
+            <div class="stat-card"><h3>Este Mes</h3><div class="amount" id="monthlyTotal">$0</div></div>
+            <div class="stat-card"><h3>Pago Empleado (40%)</h3><div class="amount" id="employeePay">$0</div></div>
+            <div class="stat-card"><h3>Ganancia Neta Semana</h3><div class="amount" id="netWeekly">$0</div></div>
+            <div class="stat-card"><h3>Total Clientes</h3><div class="amount" id="totalClients">0</div></div>
+        </div>
+
+        <div class="tabs">
+            <button class="tab active" onclick="switchTab('citas')">Registrar Cita</button>
+            <button class="tab" onclick="switchTab('clientes')">Ver Clientes</button>
+            <button class="tab" onclick="switchTab('historial')">Historial de Citas</button>
+        </div>
+
+        <!-- TAB: REGISTRAR CITA -->
+        <div id="citasTab">
+            <div class="form-section">
+                <h2>Registrar Nueva Cita</h2>
+                <form id="appointmentForm">
+                    <div class="form-grid">
+                        <div class="form-group">
+                            <label for="fecha">Fecha *</label>
+                            <input type="date" id="fecha" required>
+                        </div>
+                        <div class="form-group">
+                            <label for="clienteSelect">Cliente *</label>
+                            <select id="clienteSelect" required onchange="mostrarTotalEstimado()">
+                                <option value="">Seleccionar cliente...</option>
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="totalCost">Total a Cobrar * ($)</label>
+                            <input type="number" id="totalCost" placeholder="Ej. 180" required min="0" step="1">
+                        </div>
+                    </div>
+
+                    <div id="estimadoDisplay" style="display: none; background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); padding: 20px; border-radius: 12px; margin-bottom: 20px; border: 2px solid #2196F3;">
+                        <div style="color: #1976D2; font-weight: 700; margin-bottom: 10px;">💡 Información del Cliente</div>
+                        <div style="color: #0D47A1;">
+                            <strong>Total estimado del cliente:</strong> <span id="totalEstimadoCliente" style="font-size: 1.3em; font-weight: 700; color: #2196F3;">$0</span><br>
+                            <span style="font-size: 0.9em; opacity: 0.8;">Puedes ajustar el precio final en el campo de arriba ☝️</span>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="serviciosRealizados">Servicios Realizados (opcional)</label>
+                        <input type="text" id="serviciosRealizados" placeholder="Ej. Baño completo, corte, limpieza dental">
+                    </div>
+
+                    <div class="form-group">
+                        <label for="notasCita">Notas (opcional)</label>
+                        <textarea id="notasCita" placeholder="Alguna observación sobre la cita..." style="min-height: 80px; resize: vertical; width: 100%;"></textarea>
+                    </div>
+
+                    <button type="submit" class="btn btn-primary">Registrar Cita por $<span id="displayTotal">0</span></button>
+                </form>
+            </div>
+        </div>
+
+        <!-- TAB: VER CLIENTES -->
+        <div id="clientesTab" class="hidden">
+            <div class="form-section">
+                <h2>📋 Clientes Registrados</h2>
+                <div class="search-bar">
+                    <input type="text" id="searchName" placeholder="Buscar por nombre..." onkeyup="filterClients()">
+                    <input type="text" id="searchPet" placeholder="Buscar por mascota..." onkeyup="filterClients()">
+                    <button class="btn btn-primary btn-small" onclick="exportClientsToCSV()">📊 Exportar Clientes</button>
+                </div>
+                <div id="clientsContainer" class="clients-grid"></div>
+                <div id="noClients" class="no-data" style="display: none;">
+                    <div class="no-data-icon">🐕</div>
+                    <h2>No hay clientes registrados</h2>
+                    <p>Los clientes que se registren desde el formulario aparecerán aquí.</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- TAB: HISTORIAL -->
+        <div id="historialTab" class="hidden">
+            <div class="form-section">
+                <h2>📅 Historial de Citas</h2>
+                <div style="display:flex;gap:15px;margin-bottom:25px;flex-wrap:wrap;">
+                    <input type="date" id="filterDate" style="flex:1;min-width:180px;">
+                    <select id="filterPeriod" onchange="filterAppointments()" style="flex:1;min-width:180px;">
+                        <option value="all">Todas</option><option value="today">Hoy</option><option value="week">Semana</option><option value="month">Mes</option>
+                    </select>
+                    <button class="btn btn-primary btn-small" onclick="filterAppointments()">Filtrar</button>
+                    <button class="btn btn-primary btn-small" onclick="exportAppointmentsToCSV()">📊 Exportar Citas</button>
+                </div>
+                <div id="appointmentsContainer"></div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        const prices = {
+            completo: { 'CH/M': 150, 'G': 180, 'XG': 200 },
+            keratina: { 'CH/M': 200, 'G': 220, 'XG': 250 },
+            medicado: { 'CH/M': 200, 'G': 220, 'XG': 250 },
+            limpiezaDental: 50,
+            corteCompleto: { 'CH/M': 80, 'G': 120, 'XG': 150 },
+            corteLimpieza: 50,
+            deslanadoCorto: { 'CH/M': 50, 'G': 150 },
+            deslanadoLargo: { 'CH/M': 100, 'G': 180 },
+            spa: 150
+        };
+
+        let appointments = [];
+        let allClients = [];
+
+        // FUNCIÓN PARA CAMBIAR DE PESTAÑA
+        function switchTab(tabName) {
+            document.getElementById('citasTab').classList.add('hidden');
+            document.getElementById('clientesTab').classList.add('hidden');
+            document.getElementById('historialTab').classList.add('hidden');
+
+            document.querySelectorAll('.tab').forEach(tab => tab.classList.remove('active'));
+
+            if (tabName === 'citas') {
+                document.getElementById('citasTab').classList.remove('hidden');
+                document.querySelectorAll('.tab')[0].classList.add('active');
+            } else if (tabName === 'clientes') {
+                document.getElementById('clientesTab').classList.remove('hidden');
+                document.querySelectorAll('.tab')[1].classList.add('active');
+                displayClients(allClients);
+                populateClientSelect();
+            } else if (tabName === 'historial') {
+                document.getElementById('historialTab').classList.remove('hidden');
+                document.querySelectorAll('.tab')[2].classList.add('active');
+                filterAppointments();
+            }
+        }
+
+        // CHIWAWA: SALUDA CON EL CURSOR
+        const chihuahua = document.getElementById('chihuahua');
+        const leftPaw = document.getElementById('leftPaw');
+        const tongue = document.getElementById('tongue');
+        const tail = document.getElementById('tail');
+        let isNear = false;
+
+        document.addEventListener('mousemove', (e) => {
+            const rect = chihuahua.getBoundingClientRect();
+            const dist = Math.hypot(e.clientX - (rect.left + 55), e.clientY - (rect.top + 55));
+
+            if (dist < 160) {
+                if (!isNear) {
+                    isNear = true;
+                    leftPaw.classList.add('wave-paw');
+                    tongue.style.d = 'M82 70 Q85 75 88 70';
+                    tail.classList.add('happy-tail');
+                    setTimeout(() => { 
+                        leftPaw.classList.remove('wave-paw'); 
+                        tongue.style.d = 'M82 70 Q85 73 88 70'; 
+                    }, 1200);
+                }
+            } else if (dist > 200 && isNear) {
+                isNear = false;
+                tail.classList.remove('happy-tail');
+            }
+        });
+
+        
+        function populateClientSelect() {
+            const select = document.getElementById('clienteSelect');
+            if (!select) return;
+            
+            const currentValue = select.value;
+            select.innerHTML = '<option value="">Seleccionar cliente...</option>';
+            
+            allClients.forEach(function(client, index) {
+                const option = document.createElement('option');
+                option.value = index;
+                option.textContent = client.dueno.nombre + ' - ' + client.mascota.nombre;
+                select.appendChild(option);
+            });
+            
+            if (currentValue) {
+                select.value = currentValue;
+            }
+            
+            console.log('✅ Select actualizado con', allClients.length, 'clientes');
+        }
+
+        function loadData() {
+            // Cargar citas desde localStorage
+            appointments = JSON.parse(localStorage.getItem('cooperwash_appointments') || '[]');
+            
+            // Cargar clientes desde Firebase en tiempo real
+            if (unsubscribeClientes) {
+                unsubscribeClientes();
+            }
+            
+            unsubscribeClientes = db.collection('clientes').onSnapshot(function(snapshot) {
+                allClients = [];
+                snapshot.forEach(function(doc) {
+                    const cliente = doc.data();
+                    cliente.id = doc.id;
+                    if (!cliente.galeria) cliente.galeria = [];
+                    allClients.push(cliente);
+                });
+                
+                localStorage.setItem('cooperwash_clientes', JSON.stringify(allClients));
+                displayClients(allClients);
+                populateClientSelect();
+                updateStats();
+                
+                console.log('✅ Clientes cargados desde Firebase:', allClients.length);
+            }, function(error) {
+                console.error('Error Firebase:', error);
+                allClients = JSON.parse(localStorage.getItem('cooperwash_clientes') || '[]');
+                allClients = allClients.map(function(client) {
+                    if (!client.galeria) client.galeria = [];
+                    return client;
+                });
+                displayClients(allClients);
+                populateClientSelect();
+                updateStats();
+            });
+        }
+
+        function updateStats() {
+            const today = new Date();
+            const todayStr = today.toISOString().split('T')[0];
+            
+            // SEMANA: Lunes a Domingo
+            const dayOfWeek = today.getDay(); // 0=Domingo, 1=Lunes, 6=Sábado
+            const weekStart = new Date(today);
+            
+            if (dayOfWeek === 0) {
+                // Si es domingo, retroceder 6 días al lunes
+                weekStart.setDate(today.getDate() - 6);
+            } else {
+                // Si es lunes-sábado, retroceder al lunes
+                weekStart.setDate(today.getDate() - (dayOfWeek - 1));
+            }
+            weekStart.setHours(0, 0, 0, 0);
+            
+            const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+            
+            // Filtrar SOLO appointments (citas registradas)
+            const todayAppointments = appointments.filter(function(a) {
+                return a.fecha === todayStr;
+            });
+            
+            const weekAppointments = appointments.filter(function(a) {
+                const appointmentDate = new Date(a.fecha + 'T00:00:00');
+                return appointmentDate >= weekStart && appointmentDate <= today;
+            });
+            
+            const monthAppointments = appointments.filter(function(a) {
+                const appointmentDate = new Date(a.fecha + 'T00:00:00');
+                return appointmentDate >= monthStart && appointmentDate <= today;
+            });
+            
+            // Calcular totales
+            const dailyTotal = todayAppointments.reduce(function(sum, a) {
+                return sum + (a.total || 0);
+            }, 0);
+            
+            const weeklyTotal = weekAppointments.reduce(function(sum, a) {
+                return sum + (a.total || 0);
+            }, 0);
+            
+            const monthlyTotal = monthAppointments.reduce(function(sum, a) {
+                return sum + (a.total || 0);
+            }, 0);
+            
+            // Pago empleado (40%)
+            const employeePayWeekly = Math.round(weeklyTotal * 0.40);
+            const netWeekly = weeklyTotal - employeePayWeekly;
+            
+            // Actualizar dashboard
+            document.getElementById('dailyTotal').textContent = '$' + dailyTotal;
+            document.getElementById('weeklyTotal').textContent = '$' + weeklyTotal;
+            document.getElementById('monthlyTotal').textContent = '$' + monthlyTotal;
+            document.getElementById('employeePay').textContent = '$' + employeePayWeekly;
+            document.getElementById('netWeekly').textContent = '$' + Math.round(netWeekly);
+            document.getElementById('totalClients').textContent = allClients.length;
+            
+            // Debug
+            console.log('=== ESTADÍSTICAS ===');
+            console.log('Hoy:', todayStr);
+            console.log('Semana desde:', weekStart.toISOString().split('T')[0]);
+            console.log('Citas HOY:', todayAppointments.length, '→ $' + dailyTotal);
+            console.log('Citas SEMANA:', weekAppointments.length, '→ $' + weeklyTotal);
+        }
+
+        function loadClientSelect() {
+            const select = document.getElementById('clienteSelect');
+            select.innerHTML = '<option value="">Seleccionar cliente...</option>' +
+                allClients.map((c, i) => `<option value="${i}">${c.dueno.nombre} - ${c.mascota.nombre} (${c.mascota.raza})</option>`).join('');
+        }
+
+        // Mostrar total estimado cuando se selecciona un cliente
+        function mostrarTotalEstimado() {
+            const clientIndex = document.getElementById('clienteSelect').value;
+            const estimadoDisplay = document.getElementById('estimadoDisplay');
+            
+            if (!clientIndex) {
+                estimadoDisplay.style.display = 'none';
+                return;
+            }
+
+            const client = allClients[clientIndex];
+            const totalEstimado = client.totalEstimado || 0;
+            
+            document.getElementById('totalEstimadoCliente').textContent = '$' + totalEstimado;
+            document.getElementById('totalCost').value = totalEstimado;
+            document.getElementById('displayTotal').textContent = totalEstimado;
+            estimadoDisplay.style.display = 'block';
+        }
+
+        // Actualizar display del total mientras escribe
+        document.getElementById('totalCost').addEventListener('input', function() {
+            const total = this.value || 0;
+            document.getElementById('displayTotal').textContent = total;
+        });
+
+        document.getElementById('appointmentForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const clientIndex = document.getElementById('clienteSelect').value;
+            if (!clientIndex) {
+                alert('Por favor selecciona un cliente');
+                return;
+            }
+
+            const client = allClients[clientIndex];
+            const total = parseInt(document.getElementById('totalCost').value);
+            const servicios = document.getElementById('serviciosRealizados').value || 'Servicios realizados';
+            const notas = document.getElementById('notasCita').value || '';
+
+            if (!total || total <= 0) {
+                alert('Por favor ingresa un monto válido');
+                return;
+            }
+
+            const appointment = {
+                fecha: document.getElementById('fecha').value,
+                timestamp: new Date().toISOString(),
+                cliente: {
+                    nombre: client.dueno.nombre,
+                    telefono: client.dueno.telefono,
+                    mascota: client.mascota.nombre,
+                    raza: client.mascota.raza,
+                    foto: client.mascota.foto
+                },
+                servicios: servicios,
+                notas: notas,
+                totalEstimado: client.totalEstimado || 0,
+                total: total
+            };
+
+            appointments.push(appointment);
+            localStorage.setItem('cooperwash_appointments', JSON.stringify(appointments));
+
+            alert('✅ Cita registrada exitosamente - Total: $' + total);
+            this.reset();
+            document.getElementById('displayTotal').textContent = '0';
+            document.getElementById('estimadoDisplay').style.display = 'none';
+            document.getElementById('fecha').valueAsDate = new Date();
+            updateStats();
+            filterAppointments();
+        });
+
+        function displayClients(clients) {
+            const container = document.getElementById('clientsContainer');
+            const noClients = document.getElementById('noClients');
+
+            if (clients.length === 0) {
+                container.style.display = 'none';
+                noClients.style.display = 'block';
+                return;
+            }
+
+            container.style.display = 'grid';
+            noClients.style.display = 'none';
+
+            container.innerHTML = clients.map((client, index) => {
+                const clientAppointments = appointments.filter(a => a.cliente.telefono === client.dueno.telefono);
+                const totalGastado = clientAppointments.reduce((sum, a) => sum + a.total, 0);
+
+                const photoHTML = client.mascota.foto ? 
+                    `<img src="${client.mascota.foto}" class="client-photo" alt="${client.mascota.nombre}">` :
+                    `<div class="client-photo no-photo">🐕</div>`;
+
+                const nexgardText = client.nexgard === 'si' ? '✅ Sí le interesa' : 
+                                   client.nexgard === 'mas-info' ? '📞 Quiere información' : 
+                                   '❌ No le interesa';
+
+                const whatsappMsg = `Hola ${client.dueno.nombre}, te contacto de Cooper Wash respecto a ${client.mascota.nombre} 🐕`;
+                const whatsappUrl = `https://wa.me/${client.dueno.telefono.replace(/\D/g, '')}?text=${encodeURIComponent(whatsappMsg)}`;
+
+                return `
+                    <div class="client-card">
+                        <div class="client-header">
+                            ${photoHTML}
+                            <div class="client-info">
+                                <div class="client-name">${client.mascota.nombre}</div>
+                                <div class="client-pet">${client.mascota.raza}</div>
+                                <div style="color: #8B4513; font-size: 0.9em; margin-top: 5px;">
+                                    ${client.mascota.tamano} • ${client.mascota.sexo}
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="info-section">
+                            <div class="info-label">👤 Dueño</div>
+                            <div class="info-value">
+                                <strong>${client.dueno.nombre}</strong><br>
+                                📞 ${client.dueno.telefono}
+                            </div>
+                        </div>
+
+                        ${client.totalEstimado ? `
+                        <div class="info-section">
+                            <div class="info-label">💵 Precio Estimado</div>
+                            <div class="estimated-price">$${client.totalEstimado}</div>
+                        </div>
+                        ` : ''}
+
+                        <div class="info-section">
+                            <div class="info-label">💰 Historial</div>
+                            <div class="info-value">
+                                Citas totales: ${clientAppointments.length}<br>
+                                <div class="money-highlight">Total gastado: $${totalGastado}</div>
+                            </div>
+                        </div>
+
+                        <div class="info-section">
+                            <div class="info-label">🛡️ NexGard</div>
+                            <div class="info-value">${nexgardText}</div>
+                        </div>
+
+                        ${client.serviciosInteres.bano.length > 0 || client.serviciosInteres.corte.length > 0 || client.serviciosInteres.extras.length > 0 ? `
+                        <div class="info-section">
+                            <div class="info-label">💅 Servicios de Interés</div>
+                            <div class="tags">
+                                ${client.serviciosInteres.bano.map(s => `<span class="tag">${s}</span>`).join('')}
+                                ${client.serviciosInteres.corte.map(s => `<span class="tag">${s}</span>`).join('')}
+                                ${client.serviciosInteres.extras.map(s => `<span class="tag">${s}</span>`).join('')}
+                            </div>
+                        </div>
+                        ` : ''}
+
+                        <div class="action-buttons">
+                            <button class="btn btn-photo btn-small" onclick="openPhotoModal(${index})">📸 Foto Perfil</button>
+                            <button class="btn btn-photo btn-small" onclick="openGalleryModal(${index})">🎨 Galería</button>
+                            <button class="btn btn-primary btn-small" onclick="generarFicha(${index})">📋 Generar Ficha</button>
+                            <button class="btn btn-whatsapp btn-small" onclick="enviarWhatsApp(${index})">📱 WhatsApp</button>
+                            <button class="btn btn-danger btn-small" onclick="deleteClient(${index})">🗑️ Eliminar</button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function filterClients() {
+            const searchName = document.getElementById('searchName').value.toLowerCase();
+            const searchPet = document.getElementById('searchPet').value.toLowerCase();
+
+            const filtered = allClients.filter(client => {
+                const matchName = !searchName || client.dueno.nombre.toLowerCase().includes(searchName);
+                const matchPet = !searchPet || client.mascota.nombre.toLowerCase().includes(searchPet);
+                return matchName && matchPet;
+            });
+
+            displayClients(filtered);
+        }
+
+        function deleteClient(index) {
+            if (confirm('¿Estás segura de eliminar este cliente?')) {
+                allClients.splice(index, 1);
+                localStorage.setItem('cooperwash_clientes', JSON.stringify(allClients));
+                loadData();
+            }
+        }
+
+        function filterAppointments() {
+            const period = document.getElementById('filterPeriod').value;
+            const filterDate = document.getElementById('filterDate').value;
+            
+            let filtered = [...appointments];
+
+            if (filterDate) {
+                filtered = filtered.filter(a => a.fecha === filterDate);
+            } else if (period !== 'all') {
+                const today = new Date();
+                today.setHours(0, 0, 0, 0);
+
+                if (period === 'today') {
+                    const todayStr = today.toISOString().split('T')[0];
+                    filtered = filtered.filter(a => a.fecha === todayStr);
+                } else if (period === 'week') {
+                    const weekStart = new Date(today);
+                    weekStart.setDate(weekStart.getDate() - weekStart.getDay());
+                    filtered = filtered.filter(a => new Date(a.fecha) >= weekStart);
+                } else if (period === 'month') {
+                    const monthStart = new Date(today.getFullYear(), today.getMonth(), 1);
+                    filtered = filtered.filter(a => new Date(a.fecha) >= monthStart);
+                }
+            }
+
+            displayAppointments(filtered);
+        }
+
+        // Modal para editar precio
+        function openEditModal(index) {
+            const appt = appointments[index];
+            const modal = document.getElementById('editModal');
+            const modalBody = document.getElementById('modalBody');
+
+            modalBody.innerHTML = `
+                <div class="form-group">
+                    <label><strong>Cliente:</strong> ${appt.cliente.nombre} - ${appt.cliente.mascota}</label>
+                </div>
+                <div class="form-group">
+                    <label><strong>Fecha:</strong> ${new Date(appt.fecha).toLocaleDateString('es-MX')}</label>
+                </div>
+                ${appt.totalEstimado ? `
+                <div class="form-group">
+                    <label><strong>Total Estimado Original:</strong></label>
+                    <div class="estimated-price">$${appt.totalEstimado}</div>
+                </div>
+                ` : ''}
+                <div class="form-group">
+                    <label for="editTotalCost">Nuevo Total a Cobrar ($) *</label>
+                    <input type="number" id="editTotalCost" value="${appt.total}" min="0" step="1" style="font-size: 1.2em; font-weight: 700;">
+                </div>
+                <div class="form-group">
+                    <label for="editNotas">Notas (opcional)</label>
+                    <textarea id="editNotas" style="min-height: 80px; resize: vertical; width: 100%;">${appt.notas || ''}</textarea>
+                </div>
+                <button class="btn btn-primary" onclick="saveEditedAppointment(${index})">💾 Guardar Cambios</button>
+            `;
+
+            modal.style.display = 'block';
+        }
+
+        function closeEditModal() {
+            document.getElementById('editModal').style.display = 'none';
+        }
+
+        function saveEditedAppointment(index) {
+            const newTotal = parseInt(document.getElementById('editTotalCost').value);
+            const newNotas = document.getElementById('editNotas').value;
+
+            if (!newTotal || newTotal <= 0) {
+                alert('Por favor ingresa un monto válido');
+                return;
+            }
+
+            appointments[index].total = newTotal;
+            appointments[index].notas = newNotas;
+            localStorage.setItem('cooperwash_appointments', JSON.stringify(appointments));
+
+            alert('✅ Cita actualizada exitosamente');
+            closeEditModal();
+            updateStats();
+            filterAppointments();
+        }
+
+        // Cerrar modal al hacer clic fuera
+        window.onclick = function(event) {
+            const modal = document.getElementById('editModal');
+            if (event.target == modal) {
+                closeEditModal();
+            }
+        }
+
+        function displayAppointments(appts) {
+            const container = document.getElementById('appointmentsContainer');
+
+            if (appts.length === 0) {
+                container.innerHTML = '<div class="no-data"><div class="no-data-icon">📅</div><h2>No hay citas registradas</h2></div>';
+                return;
+            }
+
+            appts.sort((a, b) => new Date(b.fecha) - new Date(a.fecha));
+
+            container.innerHTML = appts.map((appt, index) => {
+                const photoHTML = appt.cliente.foto ? 
+                    `<img src="${appt.cliente.foto}" class="client-photo" alt="${appt.cliente.mascota}" style="width: 60px; height: 60px;">` :
+                    `<div class="client-photo no-photo" style="width: 60px; height: 60px; font-size: 2em;">🐕</div>`;
+
+                const allIndex = appointments.findIndex(a => a.timestamp === appt.timestamp);
+
+                return `
+                    <div class="client-card" style="margin-bottom: 15px;">
+                        <div class="client-header">
+                            ${photoHTML}
+                            <div class="client-info">
+                                <div class="client-name">${appt.cliente.mascota}</div>
+                                <div class="client-pet">${appt.cliente.raza}</div>
+                                <div style="color: #6d4c41; font-size: 0.9em;">${appt.cliente.nombre} • 📞 ${appt.cliente.telefono}</div>
+                            </div>
+                            <div style="text-align: right;">
+                                <div style="color: #8B4513; font-weight: 700; font-size: 1.1em;">📅 ${new Date(appt.fecha).toLocaleDateString('es-MX')}</div>
+                                ${appt.totalEstimado ? `<div class="estimated-price" style="margin-top: 5px; font-size: 0.85em;">Est: $${appt.totalEstimado}</div>` : ''}
+                                <div class="money-highlight" style="margin-top: 10px;">$${appt.total}</div>
+                            </div>
+                        </div>
+                        <div class="info-section">
+                            <div class="info-label">💅 Servicios Realizados</div>
+                            <div class="info-value">${appt.servicios}</div>
+                            ${appt.notas ? `<div style="margin-top: 8px; font-style: italic; color: #6d4c41;">📝 ${appt.notas}</div>` : ''}
+                        </div>
+                        <div class="action-buttons">
+                            <button class="btn btn-edit btn-small" onclick="openEditModal(${allIndex})">
+                                ✏️ Editar Precio
+                            </button>
+                            <button class="btn btn-danger btn-small" onclick="deleteAppointment(${allIndex})">
+                                🗑️ Eliminar
+                            </button>
+                        </div>
+                    </div>
+                `;
+            }).join('');
+        }
+
+        function deleteAppointment(index) {
+            if (confirm('¿Estás segura de eliminar esta cita?')) {
+                appointments.splice(index, 1);
+                localStorage.setItem('cooperwash_appointments', JSON.stringify(appointments));
+                updateStats();
+                filterAppointments();
+            }
+        }
+
+        function exportClientsToCSV() {
+            if (allClients.length === 0) {
+                alert('No hay clientes para exportar');
+                return;
+            }
+
+            let csv = 'Fecha Registro,Dueño,Teléfono,Mascota,Raza,Tamaño,Sexo,NexGard,Total Estimado,Total Gastado,Número de Citas\n';
+
+            allClients.forEach(client => {
+                const clientAppointments = appointments.filter(a => a.cliente.telefono === client.dueno.telefono);
+                const totalGastado = clientAppointments.reduce((sum, a) => sum + a.total, 0);
+
+                const row = [
+                    client.fechaRegistro,
+                    client.dueno.nombre,
+                    client.dueno.telefono,
+                    client.mascota.nombre,
+                    client.mascota.raza,
+                    client.mascota.tamano,
+                    client.mascota.sexo,
+                    client.nexgard,
+                    client.totalEstimado || 0,
+                    totalGastado,
+                    clientAppointments.length
+                ].join(',');
+                csv += row + '\n';
+            });
+
+            downloadCSV(csv, `cooper-wash-clientes-${new Date().toLocaleDateString('es-MX')}.csv`);
+        }
+
+        function exportAppointmentsToCSV() {
+            if (appointments.length === 0) {
+                alert('No hay citas para exportar');
+                return;
+            }
+
+            let csv = 'Fecha,Cliente,Teléfono,Mascota,Raza,Servicios,Notas,Total Estimado,Total Cobrado\n';
+
+            appointments.forEach(appt => {
+                const row = [
+                    appt.fecha,
+                    appt.cliente.nombre,
+                    appt.cliente.telefono,
+                    appt.cliente.mascota,
+                    appt.cliente.raza,
+                    `"${appt.servicios}"`,
+                    `"${appt.notas || ''}"`,
+                    appt.totalEstimado || 0,
+                    appt.total
+                ].join(',');
+                csv += row + '\n';
+            });
+
+            downloadCSV(csv, `cooper-wash-citas-${new Date().toLocaleDateString('es-MX')}.csv`);
+        }
+
+        function downloadCSV(csv, filename) {
+            const blob = new Blob([csv], { type: 'text/csv;charset=utf-8;' });
+            const link = document.createElement('a');
+            const url = URL.createObjectURL(blob);
+            link.setAttribute('href', url);
+            link.setAttribute('download', filename);
+            link.style.visibility = 'hidden';
+            document.body.appendChild(link);
+            link.click();
+            document.body.removeChild(link);
+        }
+
+        // Inicializar
+        document.getElementById('fecha').valueAsDate = new Date();
+        loadData();
+        setInterval(loadData, 30000); // Auto-actualizar cada 30 segundos
+    
+        // FUNCIONES PARA FOTOS Y GALERÍA
+        let currentClientIndex = -1;
+
+        function compressImage(file, maxWidth, quality, callback) {
+            const reader = new FileReader();
+            reader.onload = function(e) {
+                const img = new Image();
+                img.onload = function() {
+                    const canvas = document.createElement('canvas');
+                    let width = img.width;
+                    let height = img.height;
+                    if (width > maxWidth) {
+                        height = (height * maxWidth) / width;
+                        width = maxWidth;
+                    }
+                    canvas.width = width;
+                    canvas.height = height;
+                    const ctx = canvas.getContext('2d');
+                    ctx.drawImage(img, 0, 0, width, height);
+                    callback(canvas.toDataURL('image/jpeg', quality));
+                };
+                img.src = e.target.result;
+            };
+            reader.readAsDataURL(file);
+        }
+
+        function openPhotoModal(index) {
+            currentClientIndex = index;
+            const client = allClients[index];
+            const modal = document.getElementById('photoModal');
+            const modalBody = document.getElementById('photoModalBody');
+            
+            let photoHtml = client.mascota.foto ? 
+                '<img src="' + client.mascota.foto + '" style="max-width:100%;border-radius:15px;margin-bottom:20px;">' :
+                '<div style="background:#f5f5f5;padding:40px;border-radius:15px;text-align:center;margin-bottom:20px;"><div style="font-size:4em;">🐕</div><p style="color:#6d4c41;">Sin foto de perfil</p></div>';
+            
+            modalBody.innerHTML = '<div style="margin-bottom:20px;"><strong>Cliente:</strong> ' + client.dueno.nombre + '<br><strong>Mascota:</strong> ' + client.mascota.nombre + '</div>' + photoHtml + '<input type="file" id="profilePhotoInput" accept="image/*" style="display:none;"><button class="btn btn-photo" onclick="document.getElementById(\'profilePhotoInput\').click()">📸 ' + (client.mascota.foto ? 'Cambiar' : 'Agregar') + ' Foto de Perfil</button>';
+            
+            setTimeout(function() {
+                document.getElementById('profilePhotoInput').addEventListener('change', function(e) {
+                    const file = e.target.files[0];
+                    if (file) {
+                        compressImage(file, 800, 0.7, function(compressed) {
+                            allClients[currentClientIndex].mascota.foto = compressed;
+                            localStorage.setItem('cooperwash_clientes', JSON.stringify(allClients));
+                            
+                            const cliente = allClients[currentClientIndex];
+                            if (cliente.id) {
+                                db.collection('clientes').doc(cliente.id).update({
+                                    'mascota.foto': compressed
+                                }).then(function() {
+                                    console.log('✅ Foto guardada en Firebase');
+                                    alert('✅ Foto actualizada');
+                                    closePhotoModal();
+                                    displayClients(allClients);
+                populateClientSelect();
+                                }).catch(function(error) {
+                                    console.error('Error Firebase:', error);
+                                    alert('✅ Foto guardada localmente');
+                                    closePhotoModal();
+                                    displayClients(allClients);
+                populateClientSelect();
+                                });
+                            } else {
+                                alert('✅ Foto actualizada');
+                                closePhotoModal();
+                                displayClients(allClients);
+                populateClientSelect();
+                            }
+                        });
+                    }
+                });
+            }, 100);
+            
+            modal.style.display = 'block';
+        }
+
+        function closePhotoModal() {
+            document.getElementById('photoModal').style.display = 'none';
+        }
+
+        function openGalleryModal(index) {
+            currentClientIndex = index;
+            const client = allClients[index];
+            if (!client.galeria) {
+                client.galeria = [];
+            }
+            
+            const modal = document.getElementById('galleryModal');
+            const modalBody = document.getElementById('galleryModalBody');
+            
+            let itemsHtml = '';
+            for (let i = 0; i < client.galeria.length; i++) {
+                itemsHtml += '<div class="gallery-item"><img src="' + client.galeria[i] + '" alt="Foto ' + (i+1) + '"><button class="delete-photo" onclick="deleteGalleryPhoto(' + index + ',' + i + ')">✕</button></div>';
+            }
+            
+            modalBody.innerHTML = '<div style="margin-bottom:20px;"><strong>Cliente:</strong> ' + client.dueno.nombre + '<br><strong>Mascota:</strong> ' + client.mascota.nombre + '<br><strong>Fotos:</strong> ' + client.galeria.length + '</div><div class="gallery">' + itemsHtml + '<div class="gallery-item add-photo-btn" onclick="document.getElementById(\'galleryPhotoInput\').click()">➕</div></div><input type="file" id="galleryPhotoInput" accept="image/*" multiple style="display:none;">';
+            
+            setTimeout(function() {
+                const input = document.getElementById('galleryPhotoInput');
+                const newInput = input.cloneNode(true);
+                input.parentNode.replaceChild(newInput, input);
+                
+                newInput.addEventListener('change', function(e) {
+                    const files = Array.from(e.target.files);
+                    let processed = 0;
+                    
+                    files.forEach(function(file) {
+                        compressImage(file, 800, 0.7, function(compressed) {
+                            if (!allClients[currentClientIndex].galeria) {
+                                allClients[currentClientIndex].galeria = [];
+                            }
+                            allClients[currentClientIndex].galeria.push(compressed);
+                            processed++;
+                            
+                            if (processed === files.length) {
+                                localStorage.setItem('cooperwash_clientes', JSON.stringify(allClients));
+                                
+                                const cliente = allClients[currentClientIndex];
+                                if (cliente.id) {
+                                    db.collection('clientes').doc(cliente.id).update({
+                                        galeria: cliente.galeria
+                                    }).then(function() {
+                                        console.log('✅ Galería guardada en Firebase');
+                                        alert('✅ ' + files.length + ' foto(s) agregadas');
+                                        openGalleryModal(currentClientIndex);
+                                    }).catch(function(error) {
+                                        console.error('Error Firebase:', error);
+                                        alert('✅ Fotos guardadas localmente');
+                                        openGalleryModal(currentClientIndex);
+                                    });
+                                } else {
+                                    alert('✅ ' + files.length + ' foto(s) agregadas');
+                                    openGalleryModal(currentClientIndex);
+                                }
+                            }
+                        });
+                    });
+                });
+            }, 100);
+            
+            modal.style.display = 'block';
+        }
+
+        function closeGalleryModal() {
+            document.getElementById('galleryModal').style.display = 'none';
+        }
+
+        function deleteGalleryPhoto(clientIndex, photoIndex) {
+            if (confirm('¿Eliminar esta foto?')) {
+                allClients[clientIndex].galeria.splice(photoIndex, 1);
+                localStorage.setItem('cooperwash_clientes', JSON.stringify(allClients));
+                
+                const cliente = allClients[clientIndex];
+                if (cliente.id) {
+                    db.collection('clientes').doc(cliente.id).update({
+                        galeria: cliente.galeria
+                    }).then(function() {
+                        console.log('✅ Foto eliminada de Firebase');
+                        openGalleryModal(clientIndex);
+                    }).catch(function(error) {
+                        console.error('Error Firebase:', error);
+                        openGalleryModal(clientIndex);
+                    });
+                } else {
+                    openGalleryModal(clientIndex);
+                }
+            }
+        }
+
+        function generarFicha(index) {
+            const client = allClients[index];
+            const modal = document.getElementById('fichaModal');
+            const modalBody = document.getElementById('fichaModalBody');
+            
+            const photoHtml = client.mascota.foto ? '<img src="' + client.mascota.foto + '" class="ficha-photo">' : '<div class="ficha-photo no-photo">🐕</div>';
+            
+            const servicios = [].concat(client.serviciosInteres.bano, client.serviciosInteres.corte, client.serviciosInteres.extras);
+            const serviciosTexto = servicios.length > 0 ? servicios.join(', ') : 'No especificados';
+            
+            let galeriaHtml = '';
+            if (client.galeria && client.galeria.length > 0) {
+                let fotosHtml = '';
+                const fotos = client.galeria.slice(0, 6);
+                for (let i = 0; i < fotos.length; i++) {
+                    fotosHtml += '<img src="' + fotos[i] + '" style="width:100%;height:80px;object-fit:cover;border-radius:8px;border:2px solid #8B4513;">';
+                }
+                galeriaHtml = '<div class="ficha-info"><strong style="color:#8B4513;">📸 Fotos del Trabajo:</strong><br><div style="display:grid;grid-template-columns:repeat(auto-fill,minmax(80px,1fr));gap:10px;margin-top:10px;">' + fotosHtml + '</div></div>';
+            }
+            
+            const precioHtml = client.totalEstimado ? '<div class="ficha-info"><strong style="color:#8B4513;">💰 Precio Estimado:</strong><br><span style="font-size:1.5em;color:#4CAF50;font-weight:700;">$' + client.totalEstimado + '</span></div>' : '';
+            
+            const fichaHtml = '<div id="fichaContent" class="ficha-preview"><div style="text-align:center;margin-bottom:20px;padding-bottom:15px;border-bottom:3px dashed #FFB6B6;"><h2 style="font-family:\'Fredoka One\',cursive;color:#8B4513;font-size:2em;">🐕 COOPER WASH 🐕</h2></div>' + photoHtml + '<div class="ficha-name">' + client.mascota.nombre + '</div><div style="text-align:center;color:#6d4c41;font-size:1.1em;margin-bottom:20px;">' + client.mascota.raza + ' • ' + client.mascota.tamano + '</div><div class="ficha-info"><strong style="color:#8B4513;">👤 Dueño:</strong><br>' + client.dueno.nombre + '<br>📞 ' + client.dueno.telefono + '</div>' + precioHtml + '<div class="ficha-info"><strong style="color:#8B4513;">💅 Servicios de Interés:</strong><br>' + serviciosTexto + '</div>' + galeriaHtml + '<div style="text-align:center;margin-top:20px;padding-top:15px;border-top:2px dashed #FFB6B6;color:#6d4c41;font-size:0.9em;">📅 Registrado: ' + client.fechaRegistro + '</div></div><div style="margin-top:20px;display:flex;gap:10px;flex-wrap:wrap;"><button class="btn btn-primary" onclick="descargarFicha()">💾 Descargar Ficha</button><button class="btn btn-whatsapp" onclick="compartirFichaPorWhatsApp(' + index + ')">📱 Compartir por WhatsApp</button></div>';
+            
+            modalBody.innerHTML = fichaHtml;
+            modal.style.display = 'block';
+        }
+
+        function descargarFicha() {
+            const fichaElement = document.getElementById('fichaContent');
+            html2canvas(fichaElement, {backgroundColor:'#ffffff',scale:2}).then(function(canvas) {
+                const link = document.createElement('a');
+                link.download = 'ficha-cooper-wash-' + Date.now() + '.png';
+                link.href = canvas.toDataURL();
+                link.click();
+                alert('✅ Ficha descargada');
+            });
+        }
+
+        function compartirFichaPorWhatsApp(index) {
+            const client = allClients[index];
+            let telefono = client.dueno.telefono;
+            telefono = telefono.replace(/\D/g, '');
+            if (!telefono.startsWith('521')) {
+                telefono = '521' + telefono;
+            }
+            const mensaje = 'Hola ' + client.dueno.nombre + ', te mando la ficha de ' + client.mascota.nombre + ' y las fotos de su visita de hoy, gracias por venir a Cooper Wash! <3';
+            const url = 'https://wa.me/' + telefono + '?text=' + encodeURIComponent(mensaje);
+            window.open(url, '_blank');
+        }
+
+        function closeFichaModal() {
+            document.getElementById('fichaModal').style.display = 'none';
+        }
+
+    
+        function enviarWhatsApp(index) {
+            const client = allClients[index];
+            let telefono = client.dueno.telefono;
+            telefono = telefono.replace(/\D/g, '');
+            if (!telefono.startsWith('521')) {
+                telefono = '521' + telefono;
+            }
+            const mensaje = 'Hola ' + client.dueno.nombre + ', te mando la ficha de ' + client.mascota.nombre + ' y las fotos de su visita de hoy, gracias por venir a Cooper Wash! <3';
+            const url = 'https://wa.me/' + telefono + '?text=' + encodeURIComponent(mensaje);
+            window.open(url, '_blank');
+        }
+
+    </script>
+
+    <!-- Modales para funciones de fotos -->
+    <div id="photoModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">📸 Foto de Perfil</h2>
+                <span class="close" onclick="closePhotoModal()">&times;</span>
+            </div>
+            <div id="photoModalBody"></div>
+        </div>
+    </div>
+
+    <div id="galleryModal" class="modal">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h2 class="modal-title">🎨 Galería de Trabajos</h2>
+                <span class="close" onclick="closeGalleryModal()">&times;</span>
+            </div>
+            <div id="galleryModalBody"></div>
+        </div>
+    </div>
+
+    <div id="fichaModal" class="modal">
+        <div class="modal-content" style="max-width: 800px;">
+            <div class="modal-header">
+                <h2 class="modal-title">📋 Ficha del Cliente</h2>
+                <span class="close" onclick="closeFichaModal()">&times;</span>
+            </div>
+            <div id="fichaModalBody"></div>
+        </div>
+    </div>
+
+</body>
+</html>
