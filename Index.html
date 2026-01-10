@@ -1,0 +1,973 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cooper Wash - Registro de Clientes</title>
+    <link href="https://fonts.googleapis.com/css2?family=Fredoka+One:wght@400&family=Poppins:wght@300;400;600;700&display=swap" rel="stylesheet">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: linear-gradient(135deg, #ffe0f0 0%, #fff0f5 50%, #ffebee 100%);
+            min-height: 100vh;
+            padding: 20px;
+            position: relative;
+            overflow-x: hidden;
+            color: #5d4037;
+        }
+
+        /* BURBUJAS ANIMADAS */
+        @keyframes bubbleFloat {
+            0% { transform: translateY(0) scale(0.8); opacity: 0; }
+            20% { opacity: 0.8; }
+            80% { opacity: 0.6; }
+            100% { transform: translateY(-120vh) scale(1.3); opacity: 0; }
+        }
+
+        .bubble {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            animation: bubbleFloat linear infinite;
+            filter: drop-shadow(0 0 10px rgba(135, 206, 250, 0.5));
+        }
+
+        .bubble svg {
+            width: 100%;
+            height: 100%;
+        }
+
+        .bubble-1 { width: 45px; height: 45px; left: 8%; bottom: -50px; animation-duration: 7s; animation-delay: 0s; }
+        .bubble-2 { width: 35px; height: 35px; left: 18%; bottom: -50px; animation-duration: 8s; animation-delay: 1.5s; }
+        .bubble-3 { width: 55px; height: 55px; left: 28%; bottom: -50px; animation-duration: 9s; animation-delay: 3s; }
+        .bubble-4 { width: 40px; height: 40px; left: 42%; bottom: -50px; animation-duration: 7.5s; animation-delay: 0.8s; }
+        .bubble-5 { width: 48px; height: 48px; left: 52%; bottom: -50px; animation-duration: 8.5s; animation-delay: 2s; }
+        .bubble-6 { width: 32px; height: 32px; left: 65%; bottom: -50px; animation-duration: 6.5s; animation-delay: 4s; }
+        .bubble-7 { width: 50px; height: 50px; left: 75%; bottom: -50px; animation-duration: 9.5s; animation-delay: 1s; }
+        .bubble-8 { width: 38px; height: 38px; left: 88%; bottom: -50px; animation-duration: 7s; animation-delay: 3.5s; }
+
+        /* HUELLITAS */
+        @keyframes pawWiggle {
+            0%, 100% { transform: translateY(0) rotate(0deg); }
+            50% { transform: translateY(-10px) rotate(8deg); }
+        }
+
+        .paw-print {
+            position: fixed;
+            z-index: 0;
+            pointer-events: none;
+            animation: pawWiggle 5s infinite ease-in-out;
+            opacity: 0.18;
+        }
+
+        .paw-1 { top: 8%; left: 3%; width: 55px; animation-delay: 0s; }
+        .paw-2 { top: 22%; right: 5%; width: 48px; animation-delay: 1s; }
+        .paw-3 { top: 38%; left: 8%; width: 52px; animation-delay: 2s; }
+        .paw-4 { top: 50%; right: 12%; width: 45px; animation-delay: 3s; }
+        .paw-5 { top: 65%; left: 6%; width: 50px; animation-delay: 1.5s; }
+        .paw-6 { top: 80%; right: 8%; width: 47px; animation-delay: 2.5s; }
+
+        /* CORAZONES FLOTANTES */
+        @keyframes heartFloat {
+            0% { transform: translateY(0) rotate(0deg) scale(0.8); opacity: 0; }
+            30% { opacity: 0.7; }
+            70% { opacity: 0.5; }
+            100% { transform: translateY(-100vh) rotate(180deg) scale(1.1); opacity: 0; }
+        }
+
+        .heart {
+            position: fixed;
+            pointer-events: none;
+            z-index: 0;
+            animation: heartFloat linear infinite;
+            font-size: 25px;
+            opacity: 0.3;
+        }
+
+        .heart-1 { left: 12%; bottom: -30px; animation-duration: 12s; animation-delay: 0s; }
+        .heart-2 { left: 45%; bottom: -30px; animation-duration: 14s; animation-delay: 3s; }
+        .heart-3 { left: 78%; bottom: -30px; animation-duration: 13s; animation-delay: 6s; }
+
+        /* CHIWAWA CAFÉ JUGUETÓN */
+        .chihuahua {
+            width: 110px;
+            height: 110px;
+            position: fixed;
+            bottom: 30px;
+            right: 30px;
+            z-index: 10;
+            cursor: pointer;
+            transition: transform 0.3s ease;
+        }
+
+        .chihuahua:hover {
+            transform: scale(1.15);
+        }
+
+        @keyframes wave {
+            0%, 100% { transform: rotate(-15deg); }
+            50% { transform: rotate(30deg) translateY(-10px); }
+        }
+
+        .wave-paw {
+            animation: wave 0.6s ease-in-out 2;
+        }
+
+        @keyframes wag {
+            0%, 100% { transform: rotate(0deg); }
+            25% { transform: rotate(25deg); }
+            75% { transform: rotate(-25deg); }
+        }
+
+        .happy-tail {
+            animation: wag 0.5s infinite;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 30px;
+            padding: 40px;
+            box-shadow: 0 25px 70px rgba(0,0,0,0.15);
+            position: relative;
+            z-index: 1;
+            border: 5px solid #8B4513;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 35px;
+            padding-bottom: 30px;
+            border-bottom: 4px dashed #FFB6B6;
+        }
+
+        .logo {
+            width: 150px;
+            height: 150px;
+            margin: 0 auto 20px;
+            background-image: url('logo.jpeg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            background-color: white;
+            border-radius: 50%;
+            box-shadow: 0 8px 25px rgba(139, 69, 19, 0.3);
+            border: 4px solid #8B4513;
+        }
+
+        h1 {
+            font-family: 'Fredoka One', cursive;
+            color: #8B4513;
+            font-size: 2.5em;
+            margin-bottom: 8px;
+            text-shadow: 2px 2px 4px rgba(139, 69, 19, 0.1);
+        }
+
+        .subtitle {
+            color: #6d4c41;
+            font-size: 1.1em;
+            font-weight: 500;
+        }
+
+        .form-section {
+            background: linear-gradient(135deg, #fff8f5 0%, #fef5e8 100%);
+            padding: 30px;
+            border-radius: 24px;
+            border: 3px solid #FFB6B6;
+            box-shadow: 0 8px 25px rgba(255,182,182,0.2);
+        }
+
+        h2 {
+            color: #8B4513;
+            margin-bottom: 25px;
+            font-size: 1.8em;
+            font-family: 'Fredoka One', cursive;
+            text-align: center;
+        }
+
+        .section-title {
+            color: #8B4513;
+            font-size: 1.3em;
+            margin: 25px 0 15px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .section-title::before {
+            content: '🐾';
+            font-size: 1.2em;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        label {
+            display: block;
+            color: #8B4513;
+            font-weight: 600;
+            margin-bottom: 8px;
+            font-size: 1em;
+        }
+
+        label .required {
+            color: #ff4444;
+            font-weight: bold;
+        }
+
+        input[type="text"],
+        input[type="tel"],
+        input[type="number"],
+        select {
+            width: 100%;
+            padding: 14px;
+            border: 2px solid #FFB6B6;
+            border-radius: 12px;
+            font-size: 1em;
+            font-family: 'Poppins', sans-serif;
+            background: white;
+            transition: all 0.3s;
+        }
+
+        input:focus,
+        select:focus {
+            outline: none;
+            border-color: #8B4513;
+            box-shadow: 0 0 0 3px rgba(139,69,19,0.15);
+        }
+
+        .checkbox-group {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 12px;
+            margin: 15px 0;
+        }
+
+        .checkbox-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: white;
+            border: 2px solid #FFB6B6;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .checkbox-item:hover {
+            background: #fff0f0;
+            border-color: #8B4513;
+            transform: translateY(-2px);
+        }
+
+        .checkbox-item input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #8B4513;
+        }
+
+        .radio-group {
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+            margin: 15px 0;
+        }
+
+        .radio-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 12px;
+            background: white;
+            border: 2px solid #FFB6B6;
+            border-radius: 12px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+
+        .radio-item:hover {
+            background: #fff0f0;
+            border-color: #8B4513;
+        }
+
+        .radio-item input[type="radio"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+            accent-color: #8B4513;
+        }
+
+        .nexgard-section {
+            background: linear-gradient(135deg, #e1f5fe 0%, #b3e5fc 100%);
+            border: 3px solid #4FC3F7;
+            border-radius: 16px;
+            padding: 20px;
+            margin: 20px 0;
+        }
+
+        .nexgard-section h3 {
+            color: #0277BD;
+            font-size: 1.2em;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nexgard-section h3::before {
+            content: '🛡️';
+            font-size: 1.3em;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 16px 32px;
+            border: none;
+            border-radius: 12px;
+            font-size: 1.2em;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            font-family: 'Poppins', sans-serif;
+            margin-top: 25px;
+        }
+
+        .btn-primary {
+            background: linear-gradient(135deg, #8B4513 0%, #A0522D 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(139,69,19,0.3);
+        }
+
+        .btn-primary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(139,69,19,0.4);
+        }
+
+        .btn-secondary {
+            background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+            color: white;
+            box-shadow: 0 5px 15px rgba(108,117,125,0.3);
+            margin-top: 10px;
+        }
+
+        .btn-secondary:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(108,117,125,0.4);
+        }
+
+        .success-message {
+            display: none;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 12px;
+            text-align: center;
+            margin-top: 20px;
+            font-size: 1.1em;
+            font-weight: 600;
+            box-shadow: 0 5px 15px rgba(76,175,80,0.3);
+        }
+
+        .success-message.show {
+            display: block;
+            animation: slideDown 0.5s ease;
+        }
+
+        @keyframes slideDown {
+            from {
+                opacity: 0;
+                transform: translateY(-20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .info-box {
+            background: linear-gradient(135deg, #fff0f0 0%, #ffe0e0 100%);
+            border-left: 4px solid #8B4513;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 20px 0;
+            color: #6d4c41;
+            font-size: 0.95em;
+        }
+
+        .total-display {
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: white;
+            padding: 25px;
+            border-radius: 16px;
+            text-align: center;
+            margin: 25px 0;
+            box-shadow: 0 8px 20px rgba(76,175,80,0.3);
+        }
+
+        .total-display .label {
+            font-size: 1.1em;
+            margin-bottom: 8px;
+        }
+
+        .total-display .amount {
+            font-size: 2.5em;
+            font-weight: bold;
+        }
+
+        .total-display .note {
+            font-size: 0.9em;
+            margin-top: 8px;
+            opacity: 0.9;
+        }
+
+        @media (max-width: 768px) {
+            .container {
+                padding: 25px;
+            }
+
+            h1 {
+                font-size: 2em;
+            }
+
+            .checkbox-group {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script>
+        const firebaseConfig = {
+            apiKey: "AIzaSyBJnSVvjDY-RPD9468EuJsoqDH7gRMR9hw",
+            authDomain: "cooper-wash.firebaseapp.com",
+            projectId: "cooper-wash",
+            storageBucket: "cooper-wash.firebasestorage.app",
+            messagingSenderId: "453258464544",
+            appId: "1:453258464544:web:ec41218bc8bfb399d05b45"
+        };
+        firebase.initializeApp(firebaseConfig);
+        const db = firebase.firestore();
+    </script>
+
+</head>
+<body>
+    <!-- BURBUJAS CON TONOS AZULES -->
+    <div class="bubble bubble-1"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#87CEFA" opacity="0.6"/><circle cx="35" cy="35" r="15" fill="#B0E0E6" opacity="0.8"/></svg></div>
+    <div class="bubble bubble-2"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#87CEEB" opacity="0.5"/><circle cx="40" cy="30" r="10" fill="#ADD8E6" opacity="0.9"/></svg></div>
+    <div class="bubble bubble-3"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#00BFFF" opacity="0.6"/><circle cx="30" cy="40" r="18" fill="#87CEFA" opacity="0.7"/><circle cx="70" cy="35" r="14" fill="#87CEFA" opacity="0.8"/></svg></div>
+    <div class="bubble bubble-4"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#1E90FF" opacity="0.55"/><circle cx="60" cy="45" r="12" fill="#87CEEB" opacity="0.8"/></svg></div>
+    <div class="bubble bubble-5"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#4682B4" opacity="0.6"/><circle cx="35" cy="30" r="15" fill="#87CEFA" opacity="0.7"/><circle cx="65" cy="40" r="10" fill="#ADD8E6" opacity="0.8"/></svg></div>
+    <div class="bubble bubble-6"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#6495ED" opacity="0.5"/><circle cx="40" cy="35" r="12" fill="#87CEFA" opacity="0.9"/></svg></div>
+    <div class="bubble bubble-7"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#5F9EA0" opacity="0.6"/><circle cx="55" cy="40" r="14" fill="#87CEEB" opacity="0.7"/></svg></div>
+    <div class="bubble bubble-8"><svg viewBox="0 0 100 100"><circle cx="50" cy="50" r="45" fill="#4169E1" opacity="0.55"/><circle cx="45" cy="35" r="10" fill="#87CEFA" opacity="0.8"/></svg></div>
+
+    <!-- HUELLITAS -->
+    <div class="paw-print paw-1"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="60" rx="20" ry="30" fill="#8B4513" opacity="0.6"/><circle cx="35" cy="30" r="15" fill="#8B4513" opacity="0.6"/><circle cx="65" cy="30" r="15" fill="#8B4513" opacity="0.6"/><circle cx="25" cy="45" r="12" fill="#8B4513" opacity="0.6"/><circle cx="75" cy="45" r="12" fill="#8B4513" opacity="0.6"/></svg></div>
+    <div class="paw-print paw-2"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="60" rx="18" ry="28" fill="#8B4513" opacity="0.6"/><circle cx="35" cy="32" r="13" fill="#8B4513" opacity="0.6"/><circle cx="65" cy="32" r="13" fill="#8B4513" opacity="0.6"/><circle cx="25" cy="48" r="10" fill="#8B4513" opacity="0.6"/><circle cx="75" cy="48" r="10" fill="#8B4513" opacity="0.6"/></svg></div>
+    <div class="paw-print paw-3"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="60" rx="22" ry="32" fill="#8B4513" opacity="0.6"/><circle cx="33" cy="28" r="16" fill="#8B4513" opacity="0.6"/><circle cx="67" cy="28" r="16" fill="#8B4513" opacity="0.6"/><circle cx="23" cy="43" r="13" fill="#8B4513" opacity="0.6"/><circle cx="77" cy="43" r="13" fill="#8B4513" opacity="0.6"/></svg></div>
+    <div class="paw-print paw-4"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="60" rx="19" ry="29" fill="#8B4513" opacity="0.6"/><circle cx="36" cy="31" r="14" fill="#8B4513" opacity="0.6"/><circle cx="64" cy="31" r="14" fill="#8B4513" opacity="0.6"/><circle cx="26" cy="46" r="11" fill="#8B4513" opacity="0.6"/><circle cx="74" cy="46" r="11" fill="#8B4513" opacity="0.6"/></svg></div>
+    <div class="paw-print paw-5"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="60" rx="21" ry="31" fill="#8B4513" opacity="0.6"/><circle cx="34" cy="29" r="15" fill="#8B4513" opacity="0.6"/><circle cx="66" cy="29" r="15" fill="#8B4513" opacity="0.6"/><circle cx="24" cy="44" r="12" fill="#8B4513" opacity="0.6"/><circle cx="76" cy="44" r="12" fill="#8B4513" opacity="0.6"/></svg></div>
+    <div class="paw-print paw-6"><svg viewBox="0 0 100 100"><ellipse cx="50" cy="60" rx="17" ry="27" fill="#8B4513" opacity="0.6"/><circle cx="37" cy="33" r="12" fill="#8B4513" opacity="0.6"/><circle cx="63" cy="33" r="12" fill="#8B4513" opacity="0.6"/><circle cx="27" cy="49" r="9" fill="#8B4513" opacity="0.6"/><circle cx="73" cy="49" r="9" fill="#8B4513" opacity="0.6"/></svg></div>
+
+    <!-- CORAZONES -->
+    <div class="heart heart-1">💗</div>
+    <div class="heart heart-2">💕</div>
+    <div class="heart heart-3">💖</div>
+
+    <!-- CHIWAWA CAFÉ -->
+    <div class="chihuahua" id="chihuahua">
+        <svg viewBox="0 0 120 120" xmlns="http://www.w3.org/2000/svg">
+            <ellipse cx="60" cy="80" rx="35" ry="28" fill="#8B4513"/>
+            <circle cx="75" cy="55" r="25" fill="#A0522D" id="head"/>
+            <path d="M60 40 Q50 25 55 15 Q60 25 65 35 Z" fill="#8B4513"/>
+            <path d="M90 40 Q100 25 95 15 Q90 25 85 35 Z" fill="#8B4513"/>
+            <ellipse cx="85" cy="65" rx="15" ry="12" fill="#D2691E"/>
+            <circle cx="88" cy="63" r="3" fill="#000"/>
+            <circle cx="70" cy="52" r="6" fill="#fff"/>
+            <circle cx="80" cy="52" r="6" fill="#fff"/>
+            <circle cx="71" cy="53" r="3" fill="#000"/>
+            <circle cx="81" cy="53" r="3" fill="#000"/>
+            <circle cx="69" cy="51" r="2" fill="#fff" opacity="0.7"/>
+            <circle cx="79" cy="51" r="2" fill="#fff" opacity="0.7"/>
+            <path d="M82 70 Q85 73 88 70" fill="#ff6b9d" stroke="#ff6b9d" stroke-width="2" id="tongue"/>
+            <ellipse cx="45" cy="90" rx="12" ry="20" fill="#8B4513" id="leftPaw" transform="rotate(-15 45 90)"/>
+            <ellipse cx="75" cy="90" rx="12" ry="20" fill="#8B4513" id="rightPaw"/>
+            <path d="M30 75 Q20 70 25 60 Q30 65 35 70 Z" fill="#A0522D" id="tail"/>
+        </svg>
+    </div>
+
+    <div class="container">
+        <header>
+            <div class="logo"></div>
+            <h1>Cooper Wash</h1>
+            <p class="subtitle">Registro de Clientes y Mascotas</p>
+        </header>
+
+        <div class="form-section">
+            <h2>🐶 Registra a tu Peludo Amigo</h2>
+            
+            <div class="info-box">
+                <strong>¡Bienvenido a Cooper Wash!</strong> Por favor completa este formulario con la información de tu mascota. Esto nos ayudará a brindarle el mejor servicio personalizado.
+            </div>
+
+            <form id="clientForm">
+                <!-- INFORMACIÓN DEL DUEÑO -->
+                <div class="section-title">Información del Dueño</div>
+                
+                <div class="form-group">
+                    <label for="nombreDueno">Nombre Completo <span class="required">*</span></label>
+                    <input type="text" id="nombreDueno" placeholder="Ej. María González" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="telefono">Teléfono <span class="required">*</span></label>
+                    <input type="tel" id="telefono" placeholder="Ej. 999-123-4567" required>
+                </div>
+
+                <!-- INFORMACIÓN DE LA MASCOTA -->
+                <div class="section-title">Información de tu Mascota</div>
+
+                <div class="form-group">
+                    <label for="nombrePerro">Nombre de tu Perro <span class="required">*</span></label>
+                    <input type="text" id="nombrePerro" placeholder="Ej. Cooper, Max, Luna" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="raza">Raza <span class="required">*</span></label>
+                    <input type="text" id="raza" placeholder="Ej. Labrador, Chihuahua, Mestizo" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="tamano">Tamaño <span class="required">*</span></label>
+                    <select id="tamano" required onchange="actualizarPreciosMostrados(); calcularTotal();">
+                        <option value="">Seleccionar...</option>
+                        <option value="CH/M">Chico/Mediano (0-15kg)</option>
+                        <option value="G">Grande (15-30kg)</option>
+                        <option value="XG">Extra Grande (30-60kg)</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="tipoPelo">Tipo de Pelo <span class="required">*</span></label>
+                    <select id="tipoPelo" required onchange="actualizarPreciosMostrados(); calcularTotal();">
+                        <option value="">Seleccionar...</option>
+                        <option value="corto">Pelo Corto</option>
+                        <option value="largo">Pelo Largo</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="sexo">Sexo <span class="required">*</span></label>
+                    <select id="sexo" required>
+                        <option value="">Seleccionar...</option>
+                        <option value="macho">Macho</option>
+                        <option value="hembra">Hembra</option>
+                    </select>
+                </div>
+
+                <!-- INFORMACIÓN DE SALUD -->
+                <div class="section-title">Información de Salud</div>
+
+                <div class="form-group">
+                    <label>¿Tiene alguna de estas condiciones?</label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="alergias" name="condiciones">
+                            <label for="alergias">Alergias</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pielSensible" name="condiciones">
+                            <label for="pielSensible">Piel Sensible</label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="pulgas" name="condiciones">
+                            <label for="pulgas">Problemas de Pulgas/Garrapatas</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- NEXGARD -->
+                <div class="nexgard-section">
+                    <h3>NexGard - Protección contra Pulgas y Garrapatas</h3>
+                    <p style="margin-bottom: 15px; color: #01579B; font-size: 0.95em;">
+                        <strong>¿Le interesa proteger a su mascota con NexGard?</strong><br>
+                        Tableta masticable que elimina pulgas y garrapatas. Protección mensual efectiva y segura.
+                    </p>
+                    <div class="radio-group">
+                        <div class="radio-item">
+                            <input type="radio" id="nexgardSi" name="nexgard" value="si">
+                            <label for="nexgardSi">Sí, me interesa NexGard</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="nexgardNo" name="nexgard" value="no" checked>
+                            <label for="nexgardNo">No, gracias</label>
+                        </div>
+                        <div class="radio-item">
+                            <input type="radio" id="nexgardInfo" name="nexgard" value="mas-info">
+                            <label for="nexgardInfo">Quiero más información</label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- SERVICIOS DE INTERÉS -->
+                <div class="section-title">Servicios de Interés</div>
+
+                <div class="info-box" style="background: linear-gradient(135deg, #e3f2fd 0%, #bbdefb 100%); border-left-color: #1976d2;">
+                    <strong>💰 Precios según tamaño de tu mascota</strong><br>
+                    Los precios se calcularán automáticamente según el tamaño que seleccionaste arriba.
+                </div>
+
+                <div class="form-group">
+                    <label><strong>Tipo de Baño</strong></label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="banoCompleto" name="bano" onchange="calcularTotal()">
+                            <label for="banoCompleto">
+                                Baño Completo<br>
+                                <span id="precioBanoCompleto" style="color: #4CAF50; font-weight: 700; font-size: 0.95em;">$150-$200</span>
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="banoMedicado" name="bano" onchange="calcularTotal()">
+                            <label for="banoMedicado">
+                                Baño Medicado<br>
+                                <span id="precioBanoMedicado" style="color: #4CAF50; font-weight: 700; font-size: 0.95em;">$200-$250</span>
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="banoKeratina" name="bano" onchange="calcularTotal()">
+                            <label for="banoKeratina">
+                                Baño de Keratina<br>
+                                <span id="precioBanoKeratina" style="color: #4CAF50; font-weight: 700; font-size: 0.95em;">$200-$250</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><strong>Corte de Pelo</strong></label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="corteCompleto" name="corte" onchange="calcularTotal()">
+                            <label for="corteCompleto">
+                                Corte Completo<br>
+                                <span id="precioCorteCompleto" style="color: #4CAF50; font-weight: 700; font-size: 0.95em;">$80-$150</span>
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="corteLimpieza" name="corte" onchange="calcularTotal()">
+                            <label for="corteLimpieza">
+                                Corte de Limpieza<br>
+                                <span style="color: #4CAF50; font-weight: 700; font-size: 0.95em;">$50</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="form-group">
+                    <label><strong>Servicios Adicionales</strong></label>
+                    <div class="checkbox-group">
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="limpiezaDental" name="extras" onchange="calcularTotal()">
+                            <label for="limpiezaDental">
+                                Limpieza Dental<br>
+                                <span style="color: #4CAF50; font-weight: 700; font-size: 0.95em;">$50</span>
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="deslanado" name="extras" onchange="calcularTotal()">
+                            <label for="deslanado">
+                                Deslanado<br>
+                                <span id="precioDeslanado" style="color: #4CAF50; font-weight: 700; font-size: 0.95em;">$50-$180</span>
+                            </label>
+                        </div>
+                        <div class="checkbox-item">
+                            <input type="checkbox" id="spa" name="extras" onchange="calcularTotal()">
+                            <label for="spa">
+                                Spa Premium<br>
+                                <span style="color: #4CAF50; font-weight: 700; font-size: 0.95em;">$150</span>
+                            </label>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- DISPLAY DEL TOTAL CALCULADO -->
+                <div class="total-display">
+                    <div class="label">💰 Total Estimado a Pagar:</div>
+                    <div class="amount" id="totalAPagar">$0</div>
+                    <div class="note">*Precio final puede variar según condición del pelaje</div>
+                </div>
+
+                <button type="submit" class="btn btn-primary">🐕 Registrar Mascota</button>
+            </form>
+
+            <div id="successMessage" class="success-message">
+                ✅ ¡Registro exitoso! Gracias por confiar en Cooper Wash. Nos pondremos en contacto contigo pronto.
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // TABLA DE PRECIOS
+        const precios = {
+            banoCompleto: { 'CH/M': 200, 'G': 220, 'XG': 250 },
+            banoMedicado: { 'CH/M': 250, 'G': 280, 'XG': 300 },
+            banoKeratina: { 'CH/M': 250, 'G': 280, 'XG': 300 },
+            corteCompleto: { 'CH/M': 80, 'G': 120, 'XG': 150 },
+            corteLimpieza: 50,
+            limpiezaDental: 70,
+            deslanado: {
+                'CH/M': { 'corto': 70, 'largo': 120 },
+                'G': { 'corto': 150, 'largo': 200 },
+                'XG': { 'corto': 150, 'largo': 200 }
+            },
+            spa: 200
+        };
+
+        function actualizarPreciosMostrados() {
+            const tamano = document.getElementById('tamano').value;
+            const tipoPelo = document.getElementById('tipoPelo').value;
+            if (!tamano) return;
+
+            document.getElementById('precioBanoCompleto').textContent = `$${precios.banoCompleto[tamano]}`;
+            document.getElementById('precioBanoMedicado').textContent = `$${precios.banoMedicado[tamano]}`;
+            document.getElementById('precioBanoKeratina').textContent = `$${precios.banoKeratina[tamano]}`;
+            document.getElementById('precioCorteCompleto').textContent = `$${precios.corteCompleto[tamano]}`;
+
+            if (tipoPelo && precios.deslanado[tamano] && precios.deslanado[tamano][tipoPelo]) {
+                document.getElementById('precioDeslanado').textContent = `$${precios.deslanado[tamano][tipoPelo]}`;
+            } else {
+                document.getElementById('precioDeslanado').textContent = '$-';
+            }
+        }
+
+        function calcularTotal() {
+            const tamano = document.getElementById('tamano').value;
+            const tipoPelo = document.getElementById('tipoPelo').value;
+            if (!tamano) {
+                document.getElementById('totalAPagar').textContent = '$0';
+                return;
+            }
+
+            let total = 0;
+
+            if (document.getElementById('banoCompleto').checked) total += precios.banoCompleto[tamano];
+            if (document.getElementById('banoMedicado').checked) total += precios.banoMedicado[tamano];
+            if (document.getElementById('banoKeratina').checked) total += precios.banoKeratina[tamano];
+            if (document.getElementById('corteCompleto').checked) total += precios.corteCompleto[tamano];
+            if (document.getElementById('corteLimpieza').checked) total += precios.corteLimpieza;
+            if (document.getElementById('limpiezaDental').checked) total += precios.limpiezaDental;
+            if (document.getElementById('deslanado').checked) {
+                if (tipoPelo && precios.deslanado[tamano] && precios.deslanado[tamano][tipoPelo]) {
+                    total += precios.deslanado[tamano][tipoPelo];
+                }
+            }
+            if (document.getElementById('spa').checked) total += precios.spa;
+
+            document.getElementById('totalAPagar').textContent = '$' + total;
+        }
+
+        // CHIWAWA: SALUDA CON EL CURSOR
+        const chihuahua = document.getElementById('chihuahua');
+        const leftPaw = document.getElementById('leftPaw');
+        const tongue = document.getElementById('tongue');
+        const tail = document.getElementById('tail');
+        let isNear = false;
+
+        document.addEventListener('mousemove', (e) => {
+            const rect = chihuahua.getBoundingClientRect();
+            const dist = Math.hypot(e.clientX - (rect.left + 55), e.clientY - (rect.top + 55));
+
+            if (dist < 160) {
+                if (!isNear) {
+                    isNear = true;
+                    leftPaw.classList.add('wave-paw');
+                    tongue.style.d = 'M82 70 Q85 75 88 70';
+                    tail.classList.add('happy-tail');
+                    setTimeout(() => { 
+                        leftPaw.classList.remove('wave-paw'); 
+                        tongue.style.d = 'M82 70 Q85 73 88 70'; 
+                    }, 1200);
+                }
+            } else if (dist > 200 && isNear) {
+                isNear = false;
+                tail.classList.remove('happy-tail');
+            }
+        });
+
+        // Función para resetear manualmente el formulario
+        function resetearFormulario() {
+            document.getElementById('clientForm').reset();
+            document.getElementById('successMessage').classList.remove('show');
+            document.getElementById('totalAPagar').textContent = '$0';
+            window.scrollTo({ top: 0, behavior: 'smooth' });
+        }
+
+        // Manejo del formulario
+        document.getElementById('clientForm').addEventListener('submit', function(e) {
+            e.preventDefault();
+
+            const serviciosBano = [];
+            if (document.getElementById('banoCompleto').checked) serviciosBano.push('Baño Completo');
+            if (document.getElementById('banoMedicado').checked) serviciosBano.push('Baño Medicado');
+            if (document.getElementById('banoKeratina').checked) serviciosBano.push('Baño de Keratina');
+
+            const serviciosCorte = [];
+            if (document.getElementById('corteCompleto').checked) serviciosCorte.push('Corte Completo');
+            if (document.getElementById('corteLimpieza').checked) serviciosCorte.push('Corte de Limpieza');
+
+            const serviciosExtras = [];
+            if (document.getElementById('limpiezaDental').checked) serviciosExtras.push('Limpieza Dental');
+            if (document.getElementById('deslanado').checked) serviciosExtras.push('Deslanado');
+            if (document.getElementById('spa').checked) serviciosExtras.push('Spa Premium');
+
+            const totalCalculado = parseInt(document.getElementById('totalAPagar').textContent.replace('$', '')) || 0;
+
+            const formData = {
+                timestamp: new Date().toISOString(),
+                fechaRegistro: new Date().toLocaleDateString('es-MX'),
+                dueno: {
+                    nombre: document.getElementById('nombreDueno').value,
+                    telefono: document.getElementById('telefono').value
+                },
+                mascota: {
+                    nombre: document.getElementById('nombrePerro').value,
+                    raza: document.getElementById('raza').value,
+                    tamano: document.getElementById('tamano').value,
+                    tipoPelo: document.getElementById('tipoPelo').value,
+                    sexo: document.getElementById('sexo').value,
+                    foto: null
+                },
+                salud: {
+                    condiciones: {
+                        alergias: document.getElementById('alergias').checked,
+                        pielSensible: document.getElementById('pielSensible').checked,
+                        pulgas: document.getElementById('pulgas').checked
+                    }
+                },
+                nexgard: document.querySelector('input[name="nexgard"]:checked').value,
+                serviciosInteres: {
+                    bano: serviciosBano,
+                    corte: serviciosCorte,
+                    extras: serviciosExtras
+                },
+                totalEstimado: totalCalculado,
+                galeria: []
+            };
+
+            let clientes = JSON.parse(localStorage.getItem('cooperwash_clientes') || '[]');
+            clientes.push(formData);
+            localStorage.setItem('cooperwash_clientes', JSON.stringify(clientes));
+            
+            // Guardar en Firebase
+            db.collection('clientes').add(formData)
+                .then(function(docRef) {
+                    console.log('✅ Cliente guardado en Firebase con ID:', docRef.id);
+                })
+                .catch(function(error) {
+                    console.error('⚠️ Error Firebase:', error);
+                });
+
+            const serviciosBanoTexto = serviciosBano.length > 0 ? serviciosBano.join(', ') : 'Ninguno';
+            const serviciosCorteTexto = serviciosCorte.length > 0 ? serviciosCorte.join(', ') : 'Ninguno';
+            const serviciosExtrasTexto = serviciosExtras.length > 0 ? serviciosExtras.join(', ') : 'Ninguno';
+            
+            const condicionesTexto = [];
+            if (formData.salud.condiciones.alergias) condicionesTexto.push('Alergias');
+            if (formData.salud.condiciones.pielSensible) condicionesTexto.push('Piel Sensible');
+            if (formData.salud.condiciones.pulgas) condicionesTexto.push('Pulgas/Garrapatas');
+            const condicionesStr = condicionesTexto.length > 0 ? condicionesTexto.join(', ') : 'Ninguna';
+
+            const nexgardTexto = formData.nexgard === 'si' ? '✅ Sí me interesa' : 
+                                formData.nexgard === 'mas-info' ? '📞 Quiere más información' : 
+                                '❌ No le interesa';
+
+            const mensajeWhatsApp = `🐕 *NUEVO REGISTRO - COOPER WASH* 🐕
+
+👤 *DUEÑO:*
+Nombre: ${formData.dueno.nombre}
+Teléfono: ${formData.dueno.telefono}
+
+🐶 *MASCOTA:*
+Nombre: ${formData.mascota.nombre}
+Raza: ${formData.mascota.raza}
+Tamaño: ${formData.mascota.tamano}
+Sexo: ${formData.mascota.sexo}
+
+🏥 *SALUD:*
+Condiciones: ${condicionesStr}
+
+🛡️ *NEXGARD:*
+${nexgardTexto}
+
+💅 *SERVICIOS DE INTERÉS:*
+Baño: ${serviciosBanoTexto}
+Corte: ${serviciosCorteTexto}
+Extras: ${serviciosExtrasTexto}
+
+💰 *TOTAL ESTIMADO: $${totalCalculado}*
+
+📅 Registrado: ${formData.fechaRegistro}`;
+
+            const tuWhatsApp = '5219993641079';
+            const urlWhatsApp = `https://wa.me/${tuWhatsApp}?text=${encodeURIComponent(mensajeWhatsApp)}`;
+
+            document.getElementById('successMessage').innerHTML = `
+                ✅ ¡Registro exitoso! Gracias por confiar en Cooper Wash.<br>
+                <strong style="font-size: 1.3em; color: #fff;">Total estimado: $${totalCalculado}</strong><br><br>
+                <button onclick="window.open('${urlWhatsApp}', '_blank')" style="
+                    background: linear-gradient(135deg, #25D366 0%, #128C7E 100%);
+                    color: white;
+                    border: none;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    font-size: 1em;
+                    font-weight: 600;
+                    cursor: pointer;
+                    margin-top: 10px;
+                    box-shadow: 0 4px 12px rgba(37, 211, 102, 0.3);
+                ">
+                    📱 Enviar confirmación por WhatsApp
+                </button>
+                <br>
+                <button onclick="resetearFormulario()" style="
+                    background: linear-gradient(135deg, #6c757d 0%, #5a6268 100%);
+                    color: white;
+                    border: none;
+                    padding: 12px 24px;
+                    border-radius: 8px;
+                    font-size: 1em;
+                    font-weight: 600;
+                    cursor: pointer;
+                    margin-top: 10px;
+                    box-shadow: 0 4px 12px rgba(108, 117, 125, 0.3);
+                ">
+                    🐾 Registrar otra mascota
+                </button>
+            `;
+            document.getElementById('successMessage').classList.add('show');
+            document.getElementById('successMessage').scrollIntoView({ behavior: 'smooth' });
+        });
+
+        document.querySelectorAll('input').forEach(input => {
+            input.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter' && this.type !== 'submit') {
+                    e.preventDefault();
+                }
+            });
+        });
+    </script>
+</body>
+</html>
